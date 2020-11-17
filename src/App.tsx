@@ -1,8 +1,7 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { Navbar } from "./components/navbar";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { Home } from "./pages/main/home";
 import { ProductList } from "./pages/main/productList";
 
