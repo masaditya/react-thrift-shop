@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Layout, Menu, PageHeader, Input } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";  
 
 export const Navbar = () => {
-  const { Header, Footer, Content } = Layout;
+  const { Header } = Layout;
   const { Search } = Input;
   const { push } = useHistory();
 
