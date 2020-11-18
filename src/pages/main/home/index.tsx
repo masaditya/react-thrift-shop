@@ -1,17 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, Col, Divider, Layout, Row } from "antd";
+import { Col, Divider, Layout, Row } from "antd";
 import { ShopOutlined, ShoppingOutlined, TagOutlined } from "@ant-design/icons";
 import { useProductService } from "../../../lib/hook/service";
 import Slider from "react-slick";
 import { TProduct } from "../../../types";
 import { Banner } from "../../../components/banner";
 import { Product } from "../../../components/product";
+import { useProductStore } from "../../../lib/store";
 
 export const Home = () => {
   const { getProducts } = useProductService();
-  const [products, setProducts] = useState<TProduct[]>([]);
-  const { Meta } = Card;
   const { Footer } = Layout;
+  const [hotProduct, setHotProduct] = useState<TProduct[]>([]);
+  const [homeWomen, setHomeWomen] = useState<TProduct[]>([]);
+  const [homeMen, setHomeMen] = useState<TProduct[]>([]);
+  const {
+    setProducts,
+    products,
+    setWomenProduct,
+    womenProduct,
+    setMenProduct,
+    menProduct,
+  } = useProductStore((state) => state);
 
   const settings = {
     infinite: true,
@@ -27,7 +37,26 @@ export const Home = () => {
     try {
       let response = await getProducts();
       console.log(response);
-      if (response.data) setProducts(response.data);
+      if (response.data) {
+        setProducts(response.data);
+        setHotProduct(response.data.slice(0, 4));
+
+        let fwomenProduct: TProduct[] = response.data.filter(
+          (value: TProduct) => {
+            return value.gender === true;
+          }
+        );
+        setWomenProduct(fwomenProduct);
+        setHomeWomen(fwomenProduct.slice(0, 3));
+
+        let fmenProduct: TProduct[] = response.data.filter(
+          (value: TProduct) => {
+            return value.gender !== true;
+          }
+        );
+        setMenProduct(fmenProduct);
+        setHomeMen(fmenProduct.slice(0, 3));
+      }
     } catch (error) {
       console.log(error);
       console.log(products);
@@ -54,69 +83,43 @@ export const Home = () => {
           <Banner image="https://images.unsplash.com/photo-1556740714-a8395b3bf30f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" />
         </div>
       </Slider>
-      <Divider orientation="left">Pakaian Wanita</Divider>
-      <div style={{ padding: "20x" }}>
-        <Slider
-          arrows={false}
-          infinite={true}
-          slidesToScroll={1}
-          slidesToShow={3}
-        >
-          {products.map((item: TProduct, index: number) => {
+      <div className="mv-4">
+        <Divider orientation="left">Hot Products</Divider>
+        <Row style={{ marginTop: 50 }} justify="space-around">
+          {hotProduct.map((item: TProduct) => {
             return (
-              <Col span={8} key={index}>
+              <Col span={6} key={item.id_product}>
                 <Product {...item} />
               </Col>
             );
           })}
-        </Slider>
+        </Row>
       </div>
-      <Divider orientation="left">Pakaian Pria</Divider>
-      <Row style={{ marginTop: 50 }} justify="space-around">
-        <Col span={8}>
-          <Card
-            hoverable
-            style={{ width: 240, margin: "auto" }}
-            cover={
-              <img
-                alt="example"
-                src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-              />
-            }
-          >
-            <Meta title="Europe Street beat" description="www.instagram.com" />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card
-            hoverable
-            style={{ width: 240, margin: "auto" }}
-            cover={
-              <img
-                alt="example"
-                src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-              />
-            }
-          >
-            <Meta title="Europe Street beat" description="www.instagram.com" />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card
-            hoverable
-            style={{ width: 240, margin: "auto" }}
-            cover={
-              <img
-                alt="example"
-                src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-              />
-            }
-          >
-            <Meta title="Europe Street beat" description="www.instagram.com" />
-          </Card>
-        </Col>
-      </Row>
-      <Row style={{ margin: 50 }} justify="space-around">
+      <div className="mv-4">
+        <Divider orientation="left">Pakaian Wanita</Divider>
+        <Row style={{ marginTop: 50 }} justify="space-around">
+          {homeWomen.map((item: TProduct) => {
+            return (
+              <Col span={6} key={item.id_product}>
+                <Product {...item} />
+              </Col>
+            );
+          })}
+        </Row>
+      </div>
+      <div className="mv-4">
+        <Divider orientation="left">Pakaian Pria</Divider>
+        <Row style={{ marginTop: 50 }} justify="space-around">
+          {homeMen.map((item: TProduct) => {
+            return (
+              <Col span={6} key={item.id_product}>
+                <Product {...item} />
+              </Col>
+            );
+          })}
+        </Row>
+      </div>
+      <Row className="mv-4" justify="space-around">
         <Col span={6} style={{ textAlign: "center" }}>
           <ShoppingOutlined style={{ fontSize: 100, margin: "auto" }} />
         </Col>

@@ -1,14 +1,41 @@
-import React from "react";
-import { Card, Col, Layout, Menu, Row, Typography } from "antd";
+import React, { useCallback, useEffect } from "react";
+import { Card, Col, Layout, Menu, Row } from "antd";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { LaptopOutlined, UserOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
+import { useProductStore } from "../../../lib/store";
+import { TProduct } from "../../../types";
+import { Product } from "../../../components/product";
+import { useProductService } from "../../../lib/hook/service";
 
 export const ProductList = () => {
-  const { Header, Footer, Sider, Content } = Layout;
-  const { Meta } = Card;
+  const { getProducts } = useProductService();
+  const { products, womenProduct, menProduct, setProducts } = useProductStore(
+    (state) => state
+  );
+
+  const getProductCall = useCallback(async () => {
+    try {
+      let response = await getProducts();
+      console.log(response);
+      if (response.data) {
+        setProducts(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(products);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (products === undefined || products.length == 0) getProductCall();
+    return () => {};
+  }, []);
+
+  const { Sider, Content } = Layout;
   const { location } = useHistory();
   console.log(location.state);
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider>
@@ -26,110 +53,13 @@ export const ProductList = () => {
       </Sider>
       <Content>
         <Row style={{ marginTop: 50 }} justify="space-around">
-          <Col span={8}>
-            <Card
-              hoverable
-              style={{ width: 240, margin: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title="Europe Street beat"
-                description="www.instagram.com"
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card
-              hoverable
-              style={{ width: 240, margin: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title="Europe Street beat"
-                description="www.instagram.com"
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card
-              hoverable
-              style={{ width: 240, margin: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title="Europe Street beat"
-                description="www.instagram.com"
-              />
-            </Card>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: 50 }} justify="space-around">
-          <Col span={8}>
-            <Card
-              hoverable
-              style={{ width: 240, margin: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title="Europe Street beat"
-                description="www.instagram.com"
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card
-              hoverable
-              style={{ width: 240, margin: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title="Europe Street beat"
-                description="www.instagram.com"
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card
-              hoverable
-              style={{ width: 240, margin: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title="Europe Street beat"
-                description="www.instagram.com"
-              />
-            </Card>
-          </Col>
+          {products.map((item: TProduct) => {
+            return (
+              <div className="mv-2">
+                <Product {...item} />
+              </div>
+            );
+          })}
         </Row>
       </Content>
     </Layout>

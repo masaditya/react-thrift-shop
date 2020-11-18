@@ -1,3 +1,13 @@
 @import "~antd/dist/antd.css";
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
+
+.mv-4 {
+  margin-top: 4em;
+  margin-bottom: 4em;
+}
+
+.mv-2 {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
