@@ -9,7 +9,7 @@ export const Product = (props: TProduct) => {
   const { Meta } = Card;
   return (
     <Card
-      onClick={() => push("/products/" + props.id_product)}
+      onClick={() => push("/products/" + props.id_product, props)}
       hoverable
       style={{ width: 300, margin: "auto" }}
       cover={

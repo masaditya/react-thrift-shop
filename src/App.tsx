@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import { Home } from "./pages/main/home";
 import { ProductList } from "./pages/main/productList";
 import { DetailProduct } from "./pages/main/detailProduct";
+import { Footerzz } from "./components/footer";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Home />
         </Route>
       </Switch>
+      <Footerzz />
     </>
   );
 }

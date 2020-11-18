@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Col, Divider, Layout, Row } from "antd";
+import { Col, Divider, Row } from "antd";
 import { ShopOutlined, ShoppingOutlined, TagOutlined } from "@ant-design/icons";
 import { useProductService } from "../../../lib/hook/service";
 import Slider from "react-slick";
@@ -10,7 +10,6 @@ import { useProductStore } from "../../../lib/store";
 
 export const Home = () => {
   const { getProducts } = useProductService();
-  const { Footer } = Layout;
   const [hotProduct, setHotProduct] = useState<TProduct[]>([]);
   const [homeWomen, setHomeWomen] = useState<TProduct[]>([]);
   const [homeMen, setHomeMen] = useState<TProduct[]>([]);
@@ -18,9 +17,7 @@ export const Home = () => {
     setProducts,
     products,
     setWomenProduct,
-    womenProduct,
     setMenProduct,
-    menProduct,
   } = useProductStore((state) => state);
 
   const settings = {
@@ -39,6 +36,7 @@ export const Home = () => {
       console.log(response);
       if (response.data) {
         setProducts(response.data);
+        localStorage.setItem("products", response.data);
         setHotProduct(response.data.slice(0, 4));
 
         let fwomenProduct: TProduct[] = response.data.filter(
@@ -133,7 +131,6 @@ export const Home = () => {
           <ShoppingOutlined style={{ fontSize: 100, margin: "auto" }} />
         </Col>
       </Row>
-      <Footer>Footer</Footer>
     </div>
   );
 };

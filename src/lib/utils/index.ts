@@ -1,3 +1,3 @@
-export const currencyString = (prize : number)=> {
+export const currencyString = (prize? : number)=> {
     return `Rp. ${prize}`
 }
