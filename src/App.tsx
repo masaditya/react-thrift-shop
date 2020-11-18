@@ -1,27 +1,38 @@
 import React from "react";
 import "./App.css";
 import { Navbar } from "./components/navbar";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import { Home } from "./pages/main/home";
 import { ProductList } from "./pages/main/productList";
 import { DetailProduct } from "./pages/main/detailProduct";
+import { Footerzz } from "./components/footer";
+import { AdminLayout } from "./pages/auth/admin";
 
 function App() {
+  let match = useRouteMatch({
+    path: "/admin",
+    strict: false,
+    sensitive: false,
+  });
   return (
     <>
-      <Navbar />
+      {!match && <Navbar />}
       <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
         <Route exact path="/products">
           <ProductList />
         </Route>
         <Route path="/products/:id">
-          {" "}
-          <DetailProduct />{" "}
+          <DetailProduct />
         </Route>
-        <Route exact path="/">
-          <Home />
+        <Route path="/admin">
+          <AdminLayout />
         </Route>
+        <Redirect to="/" />
       </Switch>
+      {!match && <Footerzz />}
     </>
   );
 }

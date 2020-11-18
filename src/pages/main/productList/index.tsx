@@ -55,7 +55,7 @@ export const ProductList = () => {
         <Row style={{ marginTop: 50 }} justify="space-around">
           {products.map((item: TProduct) => {
             return (
-              <div className="mv-2">
+              <div className="mv-2" key={item.id_product}>
                 <Product {...item} />
               </div>
             );

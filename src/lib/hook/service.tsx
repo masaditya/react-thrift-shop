@@ -10,5 +10,12 @@ export const useProductService = () => {
     await Axios.put(`${baseUrl}/${product.id_product}`, product);
   const deleteProduct = async (id: string) =>
     await Axios.put(`${baseUrl}/${id}`);
-  return { getProducts, postProduct, updateProduct, deleteProduct } as const;
+  const findProduct = async (id: string) => await Axios.get(`${baseUrl}/${id}`);
+  return {
+    getProducts,
+    postProduct,
+    updateProduct,
+    deleteProduct,
+    findProduct,
+  } as const;
 };
