@@ -2,12 +2,15 @@ import {
   FacebookFilled,
   InstagramFilled,
   TwitterCircleFilled,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Col, Layout, Row } from "antd";
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 export const Footerzz = () => {
   const { Footer } = Layout;
+  const { push } = useHistory();
   return (
     <Footer>
       <Row>
@@ -31,6 +34,14 @@ export const Footerzz = () => {
           <p>
             <FacebookFilled style={{ fontSize: 32, paddingRight: "20px" }} />
             Michimichi.id
+          </p>
+          <p
+            onClick={() => {
+              push("/admin");
+            }}
+          >
+            <UserOutlined style={{ fontSize: 32, paddingRight: "20px" }} />
+            Admin
           </p>
         </Col>
       </Row>
