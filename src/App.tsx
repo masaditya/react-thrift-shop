@@ -7,6 +7,8 @@ import { ProductList } from "./pages/main/productList";
 import { DetailProduct } from "./pages/main/detailProduct";
 import { Footerzz } from "./components/footer";
 import { AdminLayout } from "./pages/auth/admin";
+import { Cart } from "./pages/main/cart";
+import { Checkout } from "./pages/main/checkout";
 
 function App() {
   let match = useRouteMatch({
@@ -26,6 +28,12 @@ function App() {
         </Route>
         <Route path="/products/:id">
           <DetailProduct />
+        </Route>
+        <Route path="/cart">
+          <Cart />
+        </Route>
+        <Route path="/checkout">
+          <Checkout />
         </Route>
         <Route path="/admin">
           <AdminLayout />

@@ -1,9 +1,18 @@
-import { Button, Col, Divider, Row } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  List,
+  message,
+  Row,
+  Skeleton,
+  Space,
+} from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Product } from "../../../components/product";
 import { useProductService } from "../../../lib/hook/service";
-import { useProductStore } from "../../../lib/store";
+import { useCartStore, useProductStore } from "../../../lib/store";
 import { currencyString } from "../../../lib/utils";
 import { TProduct } from "../../../types";
 
@@ -11,6 +20,8 @@ export const DetailProduct = () => {
   const [recomended, setRecomended] = useState<TProduct[]>([]);
   const [showCase, setShowCase] = useState<TProduct>();
   const { products } = useProductStore((state) => state);
+  const { addCart } = useCartStore((state) => state);
+
   const params = useParams<{ id: string }>();
   const { findProduct, getProducts } = useProductService();
 
@@ -29,6 +40,7 @@ export const DetailProduct = () => {
 
   useEffect(() => {
     if (products === undefined || products.length == 0) getProductCall();
+    else setRecomended(products.slice(2, 6));
     return () => {};
   }, []);
 
@@ -54,27 +66,53 @@ export const DetailProduct = () => {
     }
   }, [params]);
 
+  const addToCart = useCallback(
+    (product: TProduct) => {
+      addCart(product);
+      message.success(`${product.product_name} has added to cart!`);
+    },
+    [showCase]
+  );
+
   return (
     <div className="p-4">
       <Row align="middle">
         <Col span={8}>
-          <img
-            src={showCase?.product_image}
-            alt="product image"
-            style={{
-              width: "100%",
-              maxHeight: "400px",
-              objectFit: "contain",
-            }}
-          />
+          {showCase ? (
+            <img
+              src={showCase?.product_image}
+              alt="product image"
+              style={{
+                width: "100%",
+                maxHeight: "400px",
+                objectFit: "contain",
+              }}
+            />
+          ) : (
+            <Skeleton.Image />
+          )}
         </Col>
         <Col span={16} className="p-4">
-          <h1>{showCase?.product_name}</h1>
-          <h3> {currencyString(showCase?.prize)} </h3>
-          <p style={{ wordWrap: "break-word" }}>
-            {showCase?.product_description}
-          </p>
-          <Button type="primary"> Add To Cart </Button>
+          {showCase ? (
+            <>
+              {" "}
+              <h1>{showCase?.product_name}</h1>
+              <h3> {currencyString(showCase?.prize)} </h3>
+              <p style={{ wordWrap: "break-word" }}>
+                {showCase?.product_description}
+              </p>
+              <Button
+                onClick={() => {
+                  addToCart(showCase);
+                }}
+                type="primary"
+              >
+                Add To Cart
+              </Button>{" "}
+            </>
+          ) : (
+            <Skeleton paragraph={{ rows: 6 }} />
+          )}
         </Col>
       </Row>
 

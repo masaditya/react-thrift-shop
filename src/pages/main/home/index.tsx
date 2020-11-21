@@ -36,34 +36,37 @@ export const Home = () => {
       console.log(response);
       if (response.data) {
         setProducts(response.data);
-        localStorage.setItem("products", response.data);
-        setHotProduct(response.data.slice(0, 4));
-
-        let fwomenProduct: TProduct[] = response.data.filter(
-          (value: TProduct) => {
-            return value.gender === true;
-          }
-        );
-        setWomenProduct(fwomenProduct);
-        setHomeWomen(fwomenProduct.slice(0, 3));
-
-        let fmenProduct: TProduct[] = response.data.filter(
-          (value: TProduct) => {
-            return value.gender !== true;
-          }
-        );
-        setMenProduct(fmenProduct);
-        setHomeMen(fmenProduct.slice(0, 3));
+        fillSegmentProduct(response.data);
       }
     } catch (error) {
       console.log(error);
       console.log(products);
     }
-  }, []);
+  }, [products]);
+
+  const fillSegmentProduct = useCallback(
+    (data: TProduct[]) => {
+      setHotProduct(data.slice(0, 4));
+      let fwomenProduct: TProduct[] = data.filter((value: TProduct) => {
+        return value.gender === true;
+      });
+      setWomenProduct(fwomenProduct);
+      setHomeWomen(fwomenProduct.slice(0, 3));
+      let fmenProduct: TProduct[] = data.filter((value: TProduct) => {
+        return value.gender !== true;
+      });
+      setMenProduct(fmenProduct);
+      setHomeMen(fmenProduct.slice(0, 3));
+    },
+    [products]
+  );
 
   useEffect(() => {
-    getProductCall();
-  }, [getProductCall]);
+    if (products.length <= 0) getProductCall();
+    else {
+      fillSegmentProduct(products);
+    }
+  }, []);
 
   return (
     <div>
