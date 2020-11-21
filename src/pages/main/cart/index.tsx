@@ -37,16 +37,19 @@ export const Cart = () => {
           <Col lg={16} sm={24}>
             {productCart.map((item) => (
               <Row key={item.id_product} align="middle" className="mb-2">
-                <img
-                  src={item.product_image}
-                  alt="product_image"
-                  style={{
-                    width: "150px",
-                    maxHeight: "150px",
-                    objectFit: "contain",
-                  }}
-                />
-                <div className="px-2">
+                <Col xs={8}>
+                  <img
+                    src={item.product_image}
+                    alt="product_image"
+                    style={{
+                      width: "100%",
+                      maxWidth: "150px",
+                      maxHeight: "150px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Col>
+                <Col xs={16} className="px-2">
                   <h3> {item.product_name} </h3>
                   <p> {item.prize} </p>
                   <Popconfirm
@@ -60,11 +63,11 @@ export const Cart = () => {
                       Remove Item
                     </Button>
                   </Popconfirm>
-                </div>
+                </Col>
               </Row>
             ))}
           </Col>
-          <Col lg={8} sm={24}>
+          <Col lg={8} xs={24} className="py-4">
             <Row justify="space-between">
               <p>Total</p>
               <b> {currencyString(totalPrize)} </b>

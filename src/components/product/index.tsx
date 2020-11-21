@@ -11,7 +11,7 @@ export const Product = (props: TProduct) => {
     <Card
       onClick={() => push("/products/" + props.id_product, props)}
       hoverable
-      style={{ width: 300, margin: "auto" }}
+      style={{ width: "100%", margin: "auto", maxWidth: 250 }}
       cover={
         <img
           alt="example"

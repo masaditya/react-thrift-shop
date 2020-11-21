@@ -77,7 +77,7 @@ export const DetailProduct = () => {
   return (
     <div className="p-4">
       <Row align="middle">
-        <Col span={8}>
+        <Col lg={8} md={8}>
           {showCase ? (
             <img
               src={showCase?.product_image}
@@ -92,7 +92,7 @@ export const DetailProduct = () => {
             <Skeleton.Image />
           )}
         </Col>
-        <Col span={16} className="p-4">
+        <Col xs={24} md={16} className="px-2">
           {showCase ? (
             <>
               {" "}
@@ -121,7 +121,13 @@ export const DetailProduct = () => {
         <Row style={{ marginTop: 50 }} justify="space-around">
           {recomended.map((item: TProduct) => {
             return (
-              <Col span={6} key={item.id_product}>
+              <Col
+                className="mv-2"
+                lg={6}
+                xs={24}
+                md={12}
+                key={item.id_product}
+              >
                 <Product {...item} />
               </Col>
             );

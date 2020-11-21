@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Col, Divider, Row } from "antd";
-import { ShopOutlined, ShoppingOutlined, TagOutlined } from "@ant-design/icons";
+import { BackTop, Button, Col, Divider, Row } from "antd";
+import {
+  ArrowUpOutlined,
+  ShopOutlined,
+  
+  ShoppingOutlined,
+  TagOutlined,
+} from "@ant-design/icons";
 import { useProductService } from "../../../lib/hook/service";
 import Slider from "react-slick";
 import { TProduct } from "../../../types";
@@ -70,6 +76,11 @@ export const Home = () => {
 
   return (
     <div>
+      <BackTop>
+        <Button type="primary" shape="circle">
+          <ArrowUpOutlined />
+        </Button>
+      </BackTop>
       <Slider {...settings}>
         <div>
           <Banner image="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" />
@@ -89,7 +100,13 @@ export const Home = () => {
         <Row style={{ marginTop: 50 }} justify="space-around">
           {hotProduct.map((item: TProduct) => {
             return (
-              <Col span={6} key={item.id_product}>
+              <Col
+                className="mv-2"
+                lg={6}
+                xs={24}
+                md={12}
+                key={item.id_product}
+              >
                 <Product {...item} />
               </Col>
             );
@@ -101,7 +118,13 @@ export const Home = () => {
         <Row style={{ marginTop: 50 }} justify="space-around">
           {homeWomen.map((item: TProduct) => {
             return (
-              <Col span={6} key={item.id_product}>
+              <Col
+                className="mv-2"
+                lg={6}
+                xs={24}
+                md={12}
+                key={item.id_product}
+              >
                 <Product {...item} />
               </Col>
             );
@@ -113,7 +136,13 @@ export const Home = () => {
         <Row style={{ marginTop: 50 }} justify="space-around">
           {homeMen.map((item: TProduct) => {
             return (
-              <Col span={6} key={item.id_product}>
+              <Col
+                className="mv-2"
+                lg={6}
+                xs={24}
+                md={12}
+                key={item.id_product}
+              >
                 <Product {...item} />
               </Col>
             );
@@ -121,16 +150,16 @@ export const Home = () => {
         </Row>
       </div>
       <Row className="mv-4" justify="space-around">
-        <Col span={6} style={{ textAlign: "center" }}>
+        <Col className="mv-2" lg={6} xs={12} style={{ textAlign: "center" }}>
           <ShoppingOutlined style={{ fontSize: 100, margin: "auto" }} />
         </Col>
-        <Col span={6} style={{ textAlign: "center" }}>
+        <Col className="mv-2" lg={6} xs={12} style={{ textAlign: "center" }}>
           <TagOutlined style={{ fontSize: 100, margin: "auto" }} />
         </Col>
-        <Col span={6} style={{ textAlign: "center" }}>
+        <Col className="mv-2" lg={6} xs={12} style={{ textAlign: "center" }}>
           <ShopOutlined style={{ fontSize: 100, margin: "auto" }} />
         </Col>
-        <Col span={6} style={{ textAlign: "center" }}>
+        <Col className="mv-2" lg={6} xs={12} style={{ textAlign: "center" }}>
           <ShoppingOutlined style={{ fontSize: 100, margin: "auto" }} />
         </Col>
       </Row>

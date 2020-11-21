@@ -11,7 +11,7 @@ export const Navbar = () => {
   const { productCart, removeCart } = useCartStore((state) => state);
 
   return (
-    <Header style={{ display: "flex", justifyContent: "space-between" }}>
+    <Header  style={{ display: "flex", justifyContent: "space-between" }}>
       <Menu theme="dark" mode="horizontal">
         <Menu.Item onClick={() => push("/", { type: "tops" })} key="0">
           <b style={{ color: "#FFFFFF" }}> MICHI MICHI ID </b>

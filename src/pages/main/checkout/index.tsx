@@ -149,7 +149,10 @@ export const Checkout = () => {
                 <b> {currencyString(188000)} </b>
               </Row>
             </Card>
-            <Form.Item wrapperCol={{ span: 12, offset: 6 }} className="mv-2">
+            <Form.Item
+              wrapperCol={{ lg: 12, offset: 0, xs: 24 }}
+              className="mv-2"
+            >
               <Button
                 icon={<ContainerOutlined />}
                 size="large"
