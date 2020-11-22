@@ -1,6 +1,7 @@
 {
   "name": "michimichi-id",
   "version": "0.1.0",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@ant-design/colors": "^4.0.5",
@@ -16,6 +17,7 @@
     "@types/react-slick": "^0.23.4",
     "antd": "^4.8.2",
     "axios": "^0.21.0",
+    "emailjs-com": "^2.6.4",
     "jquery": "^3.5.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

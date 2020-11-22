@@ -10,6 +10,7 @@ export const Cart = () => {
   const [totalPrize, setTotalPrize] = useState<number>(0);
   const [grandPrize, setGrandPrize] = useState<number>(0);
   console.log(productCart);
+
   const { push } = useHistory();
 
   const onDelete = useCallback((id: string) => {
@@ -43,7 +44,6 @@ export const Cart = () => {
                     alt="product_image"
                     style={{
                       width: "100%",
-                      maxWidth: "150px",
                       maxHeight: "150px",
                       objectFit: "contain",
                     }}
@@ -74,11 +74,11 @@ export const Cart = () => {
             </Row>
             <Row justify="space-between">
               <p>Discount</p>
-              <b> {currencyString(2000)} </b>
+              <b> {currencyString(5000)} </b>
             </Row>
             <Row justify="space-between">
               <p>Grand Prize</p>
-              <b> {currencyString(grandPrize)} </b>
+              <b> {currencyString(totalPrize - 5000)} </b>
             </Row>
             <Button onClick={() => push("/checkout")} block>
               Checkout
@@ -97,7 +97,7 @@ export const Cart = () => {
               }}
               type="primary"
             >
-              Continoue Shoping
+              Continue Shoping
             </Button>
           }
         />

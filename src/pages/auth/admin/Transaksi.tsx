@@ -1,37 +1,56 @@
-import React from "react";
-import { Table, Tag, Space, Button } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { Table, Space, Button } from "antd";
+import { useTransactionService } from "../../../lib/hook/service";
 export const Transaksi = () => {
+  const { getTransaction } = useTransactionService();
+
+  const [transactionData, setTransactionData] = useState([]);
+
+  useEffect(() => {
+    getListTransaction();
+    return () => {};
+  }, []);
+
+  const getListTransaction = useCallback(async () => {
+    try {
+      const response = await getTransaction();
+      if (response) setTransactionData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const columns = [
     {
       title: "Nama",
-      dataIndex: "nama",
-      key: "nama",
+      dataIndex: "name",
+      key: "name",
       render: (text: string) => <a>{text}</a>,
     },
     {
       title: "Alamat",
-      dataIndex: "alamat",
-      key: "alamat",
+      dataIndex: "address",
+      key: "address",
     },
     {
       title: "Kota",
-      dataIndex: "kota",
-      key: "kota",
+      dataIndex: "city",
+      key: "city",
     },
     {
       title: "Kecamatan",
-      dataIndex: "kecamatan",
-      key: "kecamatan",
+      dataIndex: "district",
+      key: "district",
     },
     {
       title: "Kode Pos",
-      dataIndex: "kode_pos",
-      key: "kode_pos",
+      dataIndex: "postal",
+      key: "postal",
     },
     {
       title: "Telepon",
-      dataIndex: "no_telepon",
-      key: "no_telepon",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
       title: "Email",
@@ -50,8 +69,8 @@ export const Transaksi = () => {
     },
     {
       title: "Harga",
-      dataIndex: "harga",
-      key: "harga",
+      dataIndex: "prize",
+      key: "prize",
     },
     {
       title: "Action",
@@ -64,21 +83,21 @@ export const Transaksi = () => {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      nama: "John Brown",
-      kode_pos: 32,
-      alamat: "New York No. 1 Lake Park",
-      kota: "malang",
-      tags: ["nice", "developer"],
-      kecamatan: "lowokwaru",
-      no_telepon: "085231235112",
-      email: "email@mail.com",
-      barang: "banyak",
-      notes: "adadeh",
-      harga: 5000,
-    },
-  ];
-  return <Table columns={columns} dataSource={data} />;
+  // const data = [
+  //   {
+  //     key: "1",
+  //     nama: "John Brown",
+  //     kode_pos: 32,
+  //     alamat: "New York No. 1 Lake Park",
+  //     kota: "malang",
+  //     tags: ["nice", "developer"],
+  //     kecamatan: "lowokwaru",
+  //     no_telepon: "085231235112",
+  //     email: "email@mail.com",
+  //     barang: "banyak",
+  //     notes: "adadeh",
+  //     harga: 5000,
+  //   },
+  // ];
+  return <Table columns={columns} dataSource={transactionData} />;
 };

@@ -14,6 +14,7 @@ type TCartStore = {
   productCart : TProduct[]
   addCart : (product : TProduct) => void
   removeCart : (id : string) => void
+  emptyCart : ()=> void
 }
 
 const getProductFormLocal = () : TProduct[] => {
@@ -52,5 +53,9 @@ export const useCartStore = create<TCartStore>((set) => ({
   removeCart : (id : string) => set(state=> {
     let filtered = state.productCart.filter(e => e.id_product !== id)
     localStorage.setItem("cart", JSON.stringify(filtered))
-    return({ productCart : filtered })})
+    return({ productCart : filtered })}),
+  emptyCart : ()=>  set(state => {
+    localStorage.removeItem("cart")
+    return ( {productCart : []} )
+  })
 }) )

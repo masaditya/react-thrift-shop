@@ -8,10 +8,10 @@ export const Navbar = () => {
   const { Header } = Layout;
   const { Search } = Input;
   const { push } = useHistory();
-  const { productCart, removeCart } = useCartStore((state) => state);
+  const { productCart } = useCartStore((state) => state);
 
   return (
-    <Header  style={{ display: "flex", justifyContent: "space-between" }}>
+    <Header style={{ display: "flex", justifyContent: "space-between" }}>
       <Menu theme="dark" mode="horizontal">
         <Menu.Item onClick={() => push("/", { type: "tops" })} key="0">
           <b style={{ color: "#FFFFFF" }}> MICHI MICHI ID </b>
@@ -33,7 +33,7 @@ export const Navbar = () => {
           enterButton
         />
         <Button type="text" onClick={() => push("/cart")}>
-          <Badge count={productCart.length}>
+          <Badge size="small" count={productCart.length}>
             <ShoppingCartOutlined style={{ color: "#FFFFFF", fontSize: 24 }} />
           </Badge>
         </Button>
