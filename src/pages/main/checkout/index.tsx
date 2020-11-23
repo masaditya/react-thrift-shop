@@ -94,7 +94,7 @@ export const Checkout = () => {
 
   return (
     <div className="px-4">
-      {isSuccessCheckout ? (
+      {!isSuccessCheckout ? (
         <>
           <Divider className="py-2">Checkout</Divider>
           <Form
