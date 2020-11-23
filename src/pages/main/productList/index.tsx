@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect } from "react";
-import { Card, Col, Layout, Menu, Row } from "antd";
+import { BackTop, Button, Card, Col, Layout, Menu, Row } from "antd";
 import SubMenu from "antd/lib/menu/SubMenu";
-import { LaptopOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  ArrowUpOutlined,
+  LaptopOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import { useProductStore } from "../../../lib/store";
 import { TProduct } from "../../../types";
@@ -38,7 +42,21 @@ export const ProductList = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider>
+      <BackTop>
+        <Button type="primary" shape="circle">
+          <ArrowUpOutlined />
+        </Button>
+      </BackTop>
+      <Sider
+        breakpoint="md"
+        collapsedWidth="0"
+        onBreakpoint={(broken) => {
+          console.log(broken);
+        }}
+        onCollapse={(collapsed, type) => {
+          console.log(collapsed, type);
+        }}
+      >
         <Menu mode="inline" style={{ height: "100%", borderRight: 0 }}>
           <Menu.Item style={{ fontWeight: "bold" }}> Filter </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="Type">
@@ -55,7 +73,7 @@ export const ProductList = () => {
         <Row style={{ marginTop: 50 }} justify="space-around">
           {products.map((item: TProduct) => {
             return (
-              <div className="mv-2" key={item.id_product}>
+              <div className="mb-2" key={item.id_product}>
                 <Product {...item} />
               </div>
             );

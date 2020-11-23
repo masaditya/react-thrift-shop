@@ -14,13 +14,13 @@ export const Footerzz = () => {
   return (
     <Footer>
       <Row>
-        <Col sm={24} lg={12}>
+        <Col xs={24} md={12}>
           <p>Jl. Alamat Lengkap no 69</p>
           <p>Daerah - Surabaya</p>
           <p>Telp. 08569694646</p>
           <p>Indonesia</p>
         </Col>
-        <Col sm={24} lg={12}>
+        <Col xs={24} md={12}>
           <p>
             <TwitterCircleFilled
               style={{ fontSize: 32, paddingRight: "20px" }}
@@ -41,7 +41,6 @@ export const Footerzz = () => {
             }}
           >
             <UserOutlined style={{ fontSize: 32, paddingRight: "20px" }} />
-            Admin
           </p>
         </Col>
       </Row>
