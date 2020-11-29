@@ -3,7 +3,6 @@ import { BackTop, Button, Col, Divider, Row } from "antd";
 import {
   ArrowUpOutlined,
   ShopOutlined,
-  
   ShoppingOutlined,
   TagOutlined,
 } from "@ant-design/icons";
@@ -54,12 +53,12 @@ export const Home = () => {
     (data: TProduct[]) => {
       setHotProduct(data.slice(0, 4));
       let fwomenProduct: TProduct[] = data.filter((value: TProduct) => {
-        return value.gender === true;
+        return value.gender === "female";
       });
       setWomenProduct(fwomenProduct);
       setHomeWomen(fwomenProduct.slice(0, 3));
       let fmenProduct: TProduct[] = data.filter((value: TProduct) => {
-        return value.gender !== true;
+        return value.gender === "male";
       });
       setMenProduct(fmenProduct);
       setHomeMen(fmenProduct.slice(0, 3));

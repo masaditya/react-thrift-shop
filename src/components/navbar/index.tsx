@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Layout, Menu, PageHeader, Input, Badge } from "antd";
+import { Button, Layout, Menu, Input, Badge } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import { useCartStore } from "../../lib/store";

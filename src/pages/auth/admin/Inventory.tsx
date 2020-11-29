@@ -1,49 +1,172 @@
-import React from "react";
-import { Form, Input, InputNumber, Button } from "antd";
+import React, { useCallback, useState } from "react";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Row,
+  Col,
+  Card,
+  notification,
+  Popconfirm,
+  Space,
+  Divider,
+} from "antd";
+import { TProduct } from "../../../types";
+import { FormProduct } from "./FormProduct";
+import { useProductService } from "../../../lib/hook/service";
+import { useProductStore } from "../../../lib/store";
+import { currencyString } from "../../../lib/utils";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+
+const { Option } = Select;
 
 export const Inventory = () => {
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
+  const { postProduct, updateProduct, deleteProduct } = useProductService();
+  const { products, setProducts } = useProductStore();
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [updateData, setUpdateData] = useState<TProduct>();
 
-  const onFinish = (values: any) => {
-    console.log(values);
-  };
+  const onFinish = useCallback(
+    async (values: TProduct) => {
+      setIsLoading(true);
+      console.log(values);
+
+      try {
+        if (values.id_product) {
+          console.log("UPDATE");
+          let res = await updateProduct(values);
+          let tmpID = products.findIndex(
+            (item: TProduct) => item.id_product === values.id_product
+          );
+          let tmp = [...products];
+          tmp[tmpID] = { ...values };
+          setProducts(tmp);
+          notification.success({
+            message: "Update Data Successfully",
+            description: ``,
+          });
+        } else {
+          console.log("CREATE");
+          let res = await postProduct(values);
+          let tmp: TProduct[] = [...products, res.data];
+          setProducts(tmp);
+          notification.success({
+            message: "Add Data Successfully",
+            description: ``,
+          });
+        }
+      } catch (error) {
+        notification.error({
+          message: "Error",
+          description: JSON.stringify(error).toString(),
+        });
+      }
+
+      setIsLoading(false);
+      setIsModalVisible(false);
+    },
+    [products]
+  );
+
+  const confirm = useCallback(
+    async (data: TProduct) => {
+      try {
+        console.log("DELETE");
+        let res = await deleteProduct(data.id_product);
+        let tmp = products.filter(
+          (item: TProduct) => item.id_product !== data.id_product
+        );
+        setProducts(tmp);
+        notification.success({
+          message: "Delete Data Successfully",
+          description: ``,
+        });
+      } catch (error) {
+        notification.error({
+          message: "Error",
+          description: JSON.stringify(error).toString(),
+        });
+      }
+    },
+    [products]
+  );
+
+  function cancel(e: any) {
+    console.log(e);
+    // message.error("Click on No");
+  }
+
+  console.log(products[0]);
   return (
-    <Form {...layout} name="nest-messages" onFinish={onFinish}>
-      <Form.Item
-        name={["user", "name"]}
-        label="Name"
-        rules={[{ required: true }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name={["user", "email"]}
-        label="Email"
-        rules={[{ type: "email" }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name={["user", "age"]}
-        label="Age"
-        rules={[{ type: "number", min: 0, max: 99 }]}
-      >
-        <InputNumber />
-      </Form.Item>
-      <Form.Item name={["user", "website"]} label="Website">
-        <Input />
-      </Form.Item>
-      <Form.Item name={["user", "introduction"]} label="Introduction">
-        <Input.TextArea />
-      </Form.Item>
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
+    <>
+      <Divider orientation="right">
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            setUpdateData(undefined);
+            setIsModalVisible(true);
+          }}
+        >
+          Add Product
         </Button>
-      </Form.Item>
-    </Form>
+      </Divider>
+      <FormProduct
+        isVisible={isModalVisible}
+        toggleVisible={setIsModalVisible}
+        onFinish={onFinish}
+        dataToUpdate={updateData}
+        isLoading={isLoading}
+      />
+      <Row justify="center">
+        {products.map((item: TProduct) => {
+          return (
+            <Col key={item.id_product} sm={8} lg={6} className="mb-2">
+              <Card
+                hoverable
+                style={{ width: "100%", margin: "auto", maxWidth: 250 }}
+                cover={
+                  <img
+                    alt="example"
+                    style={{
+                      width: "100%",
+                      objectFit: "cover",
+                      height: "337px",
+                    }}
+                    src={item.product_image}
+                  />
+                }
+                actions={[
+                  <EditOutlined
+                    key="edit"
+                    onClick={() => {
+                      setIsModalVisible(true);
+                      setUpdateData(item);
+                    }}
+                  />,
+                  <Popconfirm
+                    title="Are you sure to delete this task?"
+                    onConfirm={() => confirm(item)}
+                    onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <DeleteOutlined />
+                  </Popconfirm>,
+                ]}
+              >
+                <Card.Meta
+                  title={item.product_name}
+                  description={currencyString(item.prize)}
+                />
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
+    </>
   );
 };
