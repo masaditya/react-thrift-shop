@@ -34,8 +34,8 @@ export const Cart = () => {
     <div className="px-4">
       <Divider className="py-2">Cart</Divider>
       {productCart.length > 0 ? (
-        <Row>
-          <Col lg={16} sm={24}>
+        <Row justify="center">
+          <Col lg={12} sm={24}>
             {productCart.map((item) => (
               <Row key={item.id_product} align="middle" className="mb-2">
                 <Col xs={8}>
@@ -67,7 +67,7 @@ export const Cart = () => {
               </Row>
             ))}
           </Col>
-          <Col lg={8} xs={24} className="py-4">
+          <Col lg={8} xs={24}>
             <Row justify="space-between">
               <p>Total</p>
               <b> {currencyString(totalPrize)} </b>
