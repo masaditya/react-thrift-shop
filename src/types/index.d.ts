@@ -4,8 +4,8 @@ export type TProduct = {
     prize: number;
     product_description: string;
     product_image: string;
-    category: boolean;
-    gender: boolean;
+    category: string;
+    gender: string;
     product_name: string;
   };
 

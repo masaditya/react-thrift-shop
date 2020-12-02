@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Table, Space, Button } from "antd";
+import { Table, Space, Button, message, notification } from "antd";
 import { useTransactionService } from "../../../lib/hook/service";
+import { TProduct, TTransaction } from "../../../types";
+import { CheckOutlined } from "@ant-design/icons";
 export const Transaksi = () => {
-  const { getTransaction } = useTransactionService();
+  const { getTransaction, doneTransaction } = useTransactionService();
 
-  const [transactionData, setTransactionData] = useState([]);
+  const [transactionData, setTransactionData] = useState<TTransaction[]>([]);
 
   useEffect(() => {
     getListTransaction();
@@ -20,23 +22,47 @@ export const Transaksi = () => {
     }
   }, []);
 
+  const handleDoneTransaction = useCallback(async (data: TTransaction) => {
+    try {
+      const response = await doneTransaction(data.id);
+      if (response) {
+        console.log(response.data);
+        let tmpID = transactionData.findIndex(
+          (item: TTransaction) => item.id === data.id
+        );
+        let tmp = [...transactionData];
+        tmp[tmpID].status = true;
+        setTransactionData(tmp);
+        notification.success({
+          message: "Update Data Successfully",
+          description: `Transaksi atas nama ${data.name} telah selesai`,
+        });
+      }
+    } catch (error) {}
+  }, []);
+
   const columns = [
     {
       title: "Nama",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => <a>{text}</a>,
+      width: 100,
+      fixed: "left",
+      render: (text: string) => <b>{text}</b>,
+    },
+    {
+      title: "Kota",
+      dataIndex: "city",
+      key: "city",
+      width: 150,
+      fixed: "left",
     },
     {
       title: "Alamat",
       dataIndex: "address",
       key: "address",
     },
-    {
-      title: "Kota",
-      dataIndex: "city",
-      key: "city",
-    },
+
     {
       title: "Kecamatan",
       dataIndex: "district",
@@ -46,6 +72,7 @@ export const Transaksi = () => {
       title: "Kode Pos",
       dataIndex: "postal",
       key: "postal",
+      width: 100,
     },
     {
       title: "Telepon",
@@ -59,8 +86,12 @@ export const Transaksi = () => {
     },
     {
       title: "Barang",
-      dataIndex: "barang",
+      dataIndex: "cart",
       key: "barang",
+      width: 200,
+      render: (cart: TProduct[], record: any) => {
+        return cart[0].product_name;
+      },
     },
     {
       title: "Notes",
@@ -75,29 +106,33 @@ export const Transaksi = () => {
     {
       title: "Action",
       key: "action",
-      render: (text: string, record: any) => (
+      width: 150,
+      fixed: "right",
+      render: (trans: TTransaction, record: any) => (
         <Space size="middle">
-          <Button>Selesai</Button>
+          <Button
+            onClick={() => handleDoneTransaction(trans)}
+            icon={<CheckOutlined />}
+            disabled={trans.status}
+          >
+            Selesai
+          </Button>
         </Space>
       ),
     },
   ];
 
-  // const data = [
-  //   {
-  //     key: "1",
-  //     nama: "John Brown",
-  //     kode_pos: 32,
-  //     alamat: "New York No. 1 Lake Park",
-  //     kota: "malang",
-  //     tags: ["nice", "developer"],
-  //     kecamatan: "lowokwaru",
-  //     no_telepon: "085231235112",
-  //     email: "email@mail.com",
-  //     barang: "banyak",
-  //     notes: "adadeh",
-  //     harga: 5000,
-  //   },
-  // ];
-  return <Table columns={columns} dataSource={transactionData} />;
+  return (
+    <Table
+      // @ts-ignore
+      columns={columns}
+      rowKey={(record: TTransaction) => {
+        return record.id;
+      }}
+      dataSource={transactionData}
+      scroll={{ x: 1500, y: 500 }}
+      bordered
+    />
+    // <></>
+  );
 };

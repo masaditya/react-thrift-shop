@@ -17,6 +17,7 @@
     "@types/react-slick": "^0.23.4",
     "antd": "^4.8.2",
     "axios": "^0.21.0",
+    "cloudinary-react": "^1.6.8",
     "emailjs-com": "^2.6.4",
     "jquery": "^3.5.1",
     "react": "^17.0.1",
