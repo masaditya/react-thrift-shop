@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Table, Space, Button, message, notification } from "antd";
+import { Table, Space, Button, message, notification, Tag, Image } from "antd";
 import { useTransactionService } from "../../../lib/hook/service";
 import { TProduct, TTransaction } from "../../../types";
 import { CheckOutlined } from "@ant-design/icons";
@@ -22,24 +22,24 @@ export const Transaksi = () => {
     }
   }, []);
 
-  const handleDoneTransaction = useCallback(async (data: TTransaction) => {
-    try {
-      const response = await doneTransaction(data.id);
-      if (response) {
-        console.log(response.data);
-        let tmpID = transactionData.findIndex(
-          (item: TTransaction) => item.id === data.id
-        );
-        let tmp = [...transactionData];
-        tmp[tmpID].status = true;
-        setTransactionData(tmp);
-        notification.success({
-          message: "Update Data Successfully",
-          description: `Transaksi atas nama ${data.name} telah selesai`,
-        });
-      }
-    } catch (error) {}
-  }, []);
+  // const handleDoneTransaction = useCallback(async (data: TTransaction) => {
+  //   try {
+  //     const response = await doneTransaction(data.id);
+  //     if (response) {
+  //       console.log(response.data);
+  //       let tmpID = transactionData.findIndex(
+  //         (item: TTransaction) => item.id === data.id
+  //       );
+  //       let tmp = [...transactionData];
+  //       tmp[tmpID].status = true;
+  //       setTransactionData(tmp);
+  //       notification.success({
+  //         message: "Update Data Successfully",
+  //         description: `Transaksi atas nama ${data.name} telah selesai`,
+  //       });
+  //     }
+  //   } catch (error) {}
+  // }, []);
 
   const columns = [
     {
@@ -90,7 +90,13 @@ export const Transaksi = () => {
       key: "barang",
       width: 200,
       render: (cart: TProduct[], record: any) => {
-        return cart[0].product_name;
+        return (
+          <>
+            {cart.map((item, i) => {
+              return <b key={i}> {item.product_name} </b>;
+            })}
+          </>
+        );
       },
     },
     {
@@ -104,20 +110,29 @@ export const Transaksi = () => {
       key: "prize",
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Bukti Pembayaran",
+      dataIndex: "payment_image",
+      key: "payment_image",
+      render: (trans: string) => (
+        <>
+          {console.log(trans)}
+          <Image width={100} src={trans} />
+        </>
+      ),
+    },
+    {
+      title: "Status",
+      key: "status",
       width: 150,
       fixed: "right",
       render: (trans: TTransaction, record: any) => (
-        <Space size="middle">
-          <Button
-            onClick={() => handleDoneTransaction(trans)}
-            icon={<CheckOutlined />}
-            disabled={trans.status}
-          >
-            Selesai
-          </Button>
-        </Space>
+        <>
+          {trans.status ? (
+            <Tag color="green">Completed</Tag>
+          ) : (
+            <Tag color="red">Unpaid</Tag>
+          )}
+        </>
       ),
     },
   ];

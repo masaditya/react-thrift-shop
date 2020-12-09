@@ -70,6 +70,7 @@ export const Home = () => {
     if (products.length <= 0) getProductCall();
     else {
       fillSegmentProduct(products);
+      getProductCall();
     }
   }, []);
 

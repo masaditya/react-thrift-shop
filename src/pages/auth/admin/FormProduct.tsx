@@ -1,4 +1,15 @@
-import { Button, Form, Input, Select, Modal, InputNumber } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  Modal,
+  InputNumber,
+  Upload,
+  message,
+} from "antd";
+import Axios, { AxiosRequestConfig } from "axios";
 import React, { useCallback, useEffect } from "react";
 import { TProduct } from "../../../types";
 
@@ -18,6 +29,46 @@ export const FormProduct = (props: FormProductProps) => {
       form.resetFields();
     };
   }, [props.isVisible]);
+
+  const onBeforeUpload = useCallback((file: any) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    let config: AxiosRequestConfig = {
+      method: "post",
+      url: "https://api.imgur.com/3/image",
+      headers: {
+        Authorization: "Client-ID 82a000d086b1f1e",
+      },
+      data: formData,
+    };
+    Axios(config)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return false;
+  }, []);
+
+  const uploadProps = {
+    name: "image",
+    action: "https://api.imgur.com/3/image",
+    headers: {
+      Authorization: "Client-ID 82a000d086b1f1e",
+    },
+    fileList: [] as any,
+    onChange(info: any) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   return (
     <Modal
@@ -52,7 +103,9 @@ export const FormProduct = (props: FormProductProps) => {
           label="Product Image"
           rules={[{ required: true }]}
         >
-          <Input />
+          <Upload beforeUpload={onBeforeUpload}>
+            <Button icon={<UploadOutlined />}>Upload Product Image</Button>
+          </Upload>
         </Form.Item>
         <Form.Item
           name="product_description"

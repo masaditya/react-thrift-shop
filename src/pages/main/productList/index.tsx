@@ -10,11 +10,22 @@ import { useProductService } from "../../../lib/hook/service";
 
 export const ProductList = () => {
   const { getProducts } = useProductService();
+  const [maleProducts, setmaleProducts] = useState<TProduct[]>([]);
+  const [femaleProduct, setFemaleProduct] = useState<TProduct[]>([]);
+
+  const [topsProduct, setTopsProduct] = useState<TProduct[]>([]);
+  const [bottomsProduct, setBottomsProduct] = useState<TProduct[]>([]);
+
   const [sexFilter, setSexFilter] = useState();
   const [typeFilter, setTypeFilter] = useState();
-  const { products, womenProduct, menProduct, setProducts } = useProductStore(
-    (state) => state
-  );
+  const {
+    products,
+    womenProduct,
+    menProduct,
+    setProducts,
+    setWomenProduct,
+    setMenProduct,
+  } = useProductStore((state) => state);
   const { Sider, Content } = Layout;
 
   const getProductCall = useCallback(async () => {
@@ -23,6 +34,7 @@ export const ProductList = () => {
       console.log(response);
       if (response.data) {
         setProducts(response.data);
+        fillSegmentProduct(response.data);
       }
     } catch (error) {
       console.log(error);
@@ -30,9 +42,36 @@ export const ProductList = () => {
     }
   }, []);
 
+  const fillSegmentProduct = useCallback(
+    (data: TProduct[]) => {
+      let fwomenProduct: TProduct[] = data.filter((value: TProduct) => {
+        return value.gender === "female";
+      });
+      setFemaleProduct(fwomenProduct);
+      setWomenProduct(fwomenProduct);
+      let fmenProduct: TProduct[] = data.filter((value: TProduct) => {
+        return value.gender === "male";
+      });
+      setmaleProducts(fmenProduct);
+      setMenProduct(fmenProduct);
+      let tops: TProduct[] = data.filter((value: TProduct) => {
+        return value.category === "tops";
+      });
+      setTopsProduct(tops);
+      let bottoms: TProduct[] = data.filter((value: TProduct) => {
+        return value.category === "bottoms";
+      });
+      setTopsProduct(bottoms);
+    },
+    [products]
+  );
+
   useEffect(() => {
-    if (products === undefined || products.length == 0) getProductCall();
-    return () => {};
+    if (products === undefined || products.length == 0) {
+      getProductCall();
+    } else {
+      fillSegmentProduct(products);
+    }
   }, []);
 
   const applyTypeFilter = useCallback((e: any) => {

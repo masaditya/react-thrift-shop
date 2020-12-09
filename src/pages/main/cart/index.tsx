@@ -8,8 +8,6 @@ import { currencyString } from "../../../lib/utils";
 export const Cart = () => {
   const { productCart, removeCart } = useCartStore((state) => state);
   const [totalPrize, setTotalPrize] = useState<number>(0);
-  const [grandPrize, setGrandPrize] = useState<number>(0);
-  console.log(productCart);
 
   const { push } = useHistory();
 
@@ -19,22 +17,24 @@ export const Cart = () => {
     message.success("Product Removed");
   }, []);
 
-  const prizeCounter = useCallback(() => {
-    productCart.forEach((item) => {
-      setTotalPrize(totalPrize + item.prize);
-    });
-  }, [productCart]);
+  const prizeCounter = useCallback(() => {}, []);
 
   useEffect(() => {
-    prizeCounter();
-    // if (totalPrize > 0)
+    let total = 0;
+    for (let i = 0; i < productCart.length; i++) {
+      total = total + productCart[i].prize;
+    }
+    setTotalPrize(total);
+    return () => {
+      setTotalPrize(0);
+    };
   }, [productCart]);
 
   return (
     <div className="px-4">
       <Divider className="py-2">Cart</Divider>
       {productCart.length > 0 ? (
-        <Row justify="center">
+        <Row className="py-2" justify="center">
           <Col lg={12} sm={24}>
             {productCart.map((item) => (
               <Row key={item.id_product} align="middle" className="mb-2">

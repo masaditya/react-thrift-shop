@@ -2,6 +2,7 @@ import {
   Button,
   Col,
   Divider,
+  Image,
   List,
   message,
   Row,
@@ -79,7 +80,7 @@ export const DetailProduct = () => {
       <Row align="middle">
         <Col lg={8} md={8}>
           {showCase ? (
-            <img
+            <Image
               src={showCase?.product_image}
               alt="product image"
               style={{

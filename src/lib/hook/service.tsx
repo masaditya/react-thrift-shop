@@ -25,8 +25,12 @@ export const useTransactionService = () => {
   const getTransaction = async () => await Axios.get(baseUrl);
   const postTransaction = async (data: TTranscationPost) =>
     await Axios.post(baseUrl, data);
-  const doneTransaction = async (id: string) =>
-    await Axios.put(`${baseUrl}/${id}`, { status: true });
+  const doneTransaction = async (id: string, imgUrl: string) =>
+    await Axios.put(`${baseUrl}/${id}`, {
+      status: true,
+      payment_image: imgUrl,
+    });
+
   return {
     getTransaction,
     postTransaction,

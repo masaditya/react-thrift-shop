@@ -15,7 +15,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTransactionService } from "../../../lib/hook/service";
 import { useCartStore } from "../../../lib/store";
 import { currencyString } from "../../../lib/utils";
-import { TTranscationPost } from "../../../types";
+import { TTranscationPost, TTransaction } from "../../../types";
 import emailjs from "emailjs-com";
 import { useHistory } from "react-router-dom";
 
@@ -47,10 +47,11 @@ export const Checkout = () => {
         cart: productCart,
         status: false,
         prize: countGrandPrize(total, 0),
+        payment_image: "",
       };
       try {
         let response = await postTransaction(data);
-        if (response) await sendEmail(data);
+        if (response) await sendEmail(response.data);
         setIsSuccessCheckout(true);
         emptyCart();
       } catch (error) {
@@ -62,21 +63,30 @@ export const Checkout = () => {
   );
 
   useEffect(() => {
-    productCart.forEach((item) => {
-      setTotal(total + item.prize);
-    });
+    let total = 0;
+    for (let i = 0; i < productCart.length; i++) {
+      total = total + productCart[i].prize;
+    }
+    setTotal(total);
+    return () => {
+      setTotal(0);
+    };
   }, []);
 
   const countGrandPrize = (tot: number, gp: number): number => {
     return tot + gp + 20000;
   };
 
-  const sendEmail = useCallback(async (data: TTranscationPost) => {
+  const sendEmail = useCallback(async (data: TTransaction) => {
+    let tmpData: any = {};
+    data.cart.forEach((item, i) => {
+      tmpData[`product${i}_name`] = item.product_name;
+      tmpData[`product${i}_prize`] = item.prize;
+    });
     const maildata = {
       ...data,
-      prize: "65000",
-      product_name: data.cart[0].product_name,
-      product_prize: data.cart[0].prize,
+      prize: total + 20000 - 5000,
+      ...tmpData,
     };
 
     try {
@@ -90,7 +100,7 @@ export const Checkout = () => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [total]);
 
   return (
     <div className="px-4">
