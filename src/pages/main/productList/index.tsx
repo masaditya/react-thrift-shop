@@ -1,11 +1,7 @@
-import React, { useCallback, useEffect } from "react";
-import { BackTop, Button, Card, Col, Layout, Menu, Row } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { BackTop, Button, Layout, Menu, Radio, Row } from "antd";
 import SubMenu from "antd/lib/menu/SubMenu";
-import {
-  ArrowUpOutlined,
-  LaptopOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { ArrowUpOutlined, SkinOutlined, UserOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import { useProductStore } from "../../../lib/store";
 import { TProduct } from "../../../types";
@@ -14,9 +10,23 @@ import { useProductService } from "../../../lib/hook/service";
 
 export const ProductList = () => {
   const { getProducts } = useProductService();
-  const { products, womenProduct, menProduct, setProducts } = useProductStore(
-    (state) => state
-  );
+  const [maleProducts, setmaleProducts] = useState<TProduct[]>([]);
+  const [femaleProduct, setFemaleProduct] = useState<TProduct[]>([]);
+
+  const [topsProduct, setTopsProduct] = useState<TProduct[]>([]);
+  const [bottomsProduct, setBottomsProduct] = useState<TProduct[]>([]);
+
+  const [sexFilter, setSexFilter] = useState();
+  const [typeFilter, setTypeFilter] = useState();
+  const {
+    products,
+    womenProduct,
+    menProduct,
+    setProducts,
+    setWomenProduct,
+    setMenProduct,
+  } = useProductStore((state) => state);
+  const { Sider, Content } = Layout;
 
   const getProductCall = useCallback(async () => {
     try {
@@ -24,6 +34,7 @@ export const ProductList = () => {
       console.log(response);
       if (response.data) {
         setProducts(response.data);
+        fillSegmentProduct(response.data);
       }
     } catch (error) {
       console.log(error);
@@ -31,14 +42,47 @@ export const ProductList = () => {
     }
   }, []);
 
+  const fillSegmentProduct = useCallback(
+    (data: TProduct[]) => {
+      let fwomenProduct: TProduct[] = data.filter((value: TProduct) => {
+        return value.gender === "female";
+      });
+      setFemaleProduct(fwomenProduct);
+      setWomenProduct(fwomenProduct);
+      let fmenProduct: TProduct[] = data.filter((value: TProduct) => {
+        return value.gender === "male";
+      });
+      setmaleProducts(fmenProduct);
+      setMenProduct(fmenProduct);
+      let tops: TProduct[] = data.filter((value: TProduct) => {
+        return value.category === "tops";
+      });
+      setTopsProduct(tops);
+      let bottoms: TProduct[] = data.filter((value: TProduct) => {
+        return value.category === "bottoms";
+      });
+      setTopsProduct(bottoms);
+    },
+    [products]
+  );
+
   useEffect(() => {
-    if (products === undefined || products.length == 0) getProductCall();
-    return () => {};
+    if (products === undefined || products.length == 0) {
+      getProductCall();
+    } else {
+      fillSegmentProduct(products);
+    }
   }, []);
 
-  const { Sider, Content } = Layout;
-  const { location } = useHistory();
-  console.log(location.state);
+  const applyTypeFilter = useCallback((e: any) => {
+    console.log(e);
+    setTypeFilter(e.target.value);
+  }, []);
+
+  const applySexFilter = useCallback((e: any) => {
+    console.log(e);
+    setSexFilter(e.target.value);
+  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -59,13 +103,25 @@ export const ProductList = () => {
       >
         <Menu mode="inline" style={{ height: "100%", borderRight: 0 }}>
           <Menu.Item style={{ fontWeight: "bold" }}> Filter </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="Type">
-            <Menu.Item key="1">Tops</Menu.Item>
-            <Menu.Item key="2">Bottoms</Menu.Item>
+          <SubMenu key="sub1" icon={<SkinOutlined />} title="Type">
+            <Radio.Group onChange={applyTypeFilter} value={typeFilter || ""}>
+              <Radio value="tops" className="px-2 mv-1">
+                Tops
+              </Radio>
+              <Radio value="bottoms" className="px-2 mv-1">
+                Bottoms
+              </Radio>
+            </Radio.Group>
           </SubMenu>
-          <SubMenu key="sub2" icon={<LaptopOutlined />} title="Sex">
-            <Menu.Item key="5">Male</Menu.Item>
-            <Menu.Item key="5">Female</Menu.Item>
+          <SubMenu key="sub2" icon={<UserOutlined />} title="Sex">
+            <Radio.Group onChange={applySexFilter} value={sexFilter || ""}>
+              <Radio value="male" className="px-2 mv-1">
+                Male
+              </Radio>
+              <Radio value="female" className="px-2 mv-1">
+                Female
+              </Radio>
+            </Radio.Group>
           </SubMenu>
         </Menu>
       </Sider>

@@ -70,19 +70,24 @@ export const Home = () => {
     if (products.length <= 0) getProductCall();
     else {
       fillSegmentProduct(products);
+      getProductCall();
     }
   }, []);
 
   return (
     <div>
       <BackTop>
-        <Button type="primary" shape="circle">
+        <Button size="large" type="primary" shape="circle">
           <ArrowUpOutlined />
         </Button>
       </BackTop>
       <Slider {...settings}>
         <div>
-          <Banner image="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" />
+          <Banner
+            text="Selamat Datang!"
+            subtitle="Michimichi.id est. 2020"
+            image="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
+          />
         </div>
         <div>
           <Banner image="https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" />

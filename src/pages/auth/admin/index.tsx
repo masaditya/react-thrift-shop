@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BackTop, Button, Layout, Menu } from "antd";
 import {
   SkinOutlined,
@@ -18,6 +18,14 @@ import { Inventory } from "./Inventory";
 export const AdminLayout = () => {
   const { Content, Sider } = Layout;
   const { push } = useHistory();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      push("/login");
+    }
+    return () => {};
+  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -64,13 +72,19 @@ export const AdminLayout = () => {
           >
             Inventory
           </Menu.Item>
+          <Menu.Item
+            onClick={() => {
+              localStorage.removeItem("token");
+              push("/login");
+            }}
+            key="3"
+          >
+            <Button type="link">Logout</Button>
+          </Menu.Item>
         </Menu>
       </Sider>
       <Content>
-        <div
-          className="site-layout-background"
-          style={{ padding: 24, textAlign: "center" }}
-        >
+        <div className="site-layout-background" style={{ padding: 24 }}>
           <Switch>
             <Route exact path="/admin/transaksi">
               <Transaksi />

@@ -47,8 +47,12 @@ export const useProductStore = create<TProductStore>((set) => ({
 export const useCartStore = create<TCartStore>((set) => ({
   productCart : getCartFormLocal() || [],
   addCart : (data : TProduct)=> set(state => {
-    localStorage.setItem("cart", JSON.stringify([...state.productCart, data]))
-    return( {productCart : [...state.productCart, data]} )
+    if(!state.productCart.some(e => e.id_product === data.id_product)){
+      localStorage.setItem("cart", JSON.stringify([...state.productCart, data]))
+      return( {productCart : [...state.productCart, data]} )
+    }else{
+      return ( { productCart : [...state.productCart]} )
+    }
   }),
   removeCart : (id : string) => set(state=> {
     let filtered = state.productCart.filter(e => e.id_product !== id)

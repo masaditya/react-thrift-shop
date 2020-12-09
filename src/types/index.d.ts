@@ -25,6 +25,7 @@ export type TTransaction = {
   cart : TProduct[];
   payment_method : string;
   province : string;
+  payment_image? : string
 }
 
 export type TTranscationPost = Omit<TTransaction, "id">

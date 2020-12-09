@@ -9,6 +9,8 @@ import { Footerzz } from "./components/footer";
 import { AdminLayout } from "./pages/auth/admin";
 import { Cart } from "./pages/main/cart";
 import { Checkout } from "./pages/main/checkout";
+import { Login } from "./pages/auth/login";
+import { ConfirmOrder } from "./pages/main/confirmOrder";
 
 function App() {
   let match = useRouteMatch({
@@ -16,9 +18,21 @@ function App() {
     strict: false,
     sensitive: false,
   });
+
+  let matchLogin = useRouteMatch({
+    path: "/login",
+    strict: false,
+    sensitive: false,
+  });
+
+  let matchUploadTransaction = useRouteMatch({
+    path: "/confirm/:id",
+    strict: false,
+    sensitive: false,
+  });
   return (
     <>
-      {!match && <Navbar />}
+      {!match && !matchLogin && !matchUploadTransaction && <Navbar />}
       <Switch>
         <Route exact path="/">
           <Home />
@@ -29,6 +43,9 @@ function App() {
         <Route path="/products/:id">
           <DetailProduct />
         </Route>
+        <Route path="/confirm/:id">
+          <ConfirmOrder />
+        </Route>
         <Route path="/cart">
           <Cart />
         </Route>
@@ -38,9 +55,12 @@ function App() {
         <Route path="/admin">
           <AdminLayout />
         </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
         <Redirect to="/" />
       </Switch>
-      {!match && <Footerzz />}
+      {!match && !matchLogin && !matchUploadTransaction && <Footerzz />}
     </>
   );
 }
