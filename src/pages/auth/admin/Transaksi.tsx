@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Table, Space, Button, message, notification, Tag, Image } from "antd";
+import { Table, Tag, Image } from "antd";
 import { useTransactionService } from "../../../lib/hook/service";
 import { TProduct, TTransaction } from "../../../types";
-import { CheckOutlined } from "@ant-design/icons";
 export const Transaksi = () => {
-  const { getTransaction, doneTransaction } = useTransactionService();
+  const { getTransaction } = useTransactionService();
 
   const [transactionData, setTransactionData] = useState<TTransaction[]>([]);
 
@@ -21,25 +20,6 @@ export const Transaksi = () => {
       console.log(error);
     }
   }, []);
-
-  // const handleDoneTransaction = useCallback(async (data: TTransaction) => {
-  //   try {
-  //     const response = await doneTransaction(data.id);
-  //     if (response) {
-  //       console.log(response.data);
-  //       let tmpID = transactionData.findIndex(
-  //         (item: TTransaction) => item.id === data.id
-  //       );
-  //       let tmp = [...transactionData];
-  //       tmp[tmpID].status = true;
-  //       setTransactionData(tmp);
-  //       notification.success({
-  //         message: "Update Data Successfully",
-  //         description: `Transaksi atas nama ${data.name} telah selesai`,
-  //       });
-  //     }
-  //   } catch (error) {}
-  // }, []);
 
   const columns = [
     {

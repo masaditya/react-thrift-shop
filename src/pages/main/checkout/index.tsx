@@ -6,7 +6,6 @@ import {
   Divider,
   Form,
   Input,
-  InputNumber,
   Radio,
   Result,
   Row,
@@ -38,6 +37,7 @@ export const Checkout = () => {
   const { postTransaction } = useTransactionService();
   const { push } = useHistory();
   const [isSuccessCheckout, setIsSuccessCheckout] = useState(false);
+  const [idOrder, setIdOrder] = useState("");
 
   const onFinish = useCallback(
     async (value: TTranscationPost) => {
@@ -52,6 +52,7 @@ export const Checkout = () => {
       try {
         let response = await postTransaction(data);
         if (response) await sendEmail(response.data);
+        setIdOrder(response.data.id);
         setIsSuccessCheckout(true);
         emptyCart();
       } catch (error) {
@@ -77,30 +78,33 @@ export const Checkout = () => {
     return tot + gp + 20000;
   };
 
-  const sendEmail = useCallback(async (data: TTransaction) => {
-    let tmpData: any = {};
-    data.cart.forEach((item, i) => {
-      tmpData[`product${i}_name`] = item.product_name;
-      tmpData[`product${i}_prize`] = item.prize;
-    });
-    const maildata = {
-      ...data,
-      prize: total + 20000 - 5000,
-      ...tmpData,
-    };
+  const sendEmail = useCallback(
+    async (data: TTransaction) => {
+      let tmpData: any = {};
+      data.cart.forEach((item, i) => {
+        tmpData[`product${i}_name`] = item.product_name;
+        tmpData[`product${i}_prize`] = item.prize;
+      });
+      const maildata = {
+        ...data,
+        prize: total + 20000 - 5000,
+        ...tmpData,
+      };
 
-    try {
-      let response = await emailjs.send(
-        "service_kij5kx5",
-        "template_02i1fzc",
-        maildata,
-        "user_sYf18yxIGrfZK4FOuEUjN"
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [total]);
+      try {
+        let response = await emailjs.send(
+          process.env.REACT_APP_EMAIL_SERVICE || "",
+          process.env.REACT_APP_EMAIL_TEMPLATE || "",
+          maildata,
+          process.env.REACT_APP_EMAIL_USER || ""
+        );
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [total]
+  );
 
   return (
     <div className="px-4">
@@ -260,7 +264,7 @@ export const Checkout = () => {
         <Result
           status="success"
           title="Successfully Create Order!"
-          subTitle="Order number: 2017182818828182881 Please Check your Email to Complete your order"
+          subTitle={`Order number: 2021${idOrder} Please Check your Email to Complete your order`}
           extra={[
             <Button type="primary" href="https://mail.google.com/">
               Go To Mail
