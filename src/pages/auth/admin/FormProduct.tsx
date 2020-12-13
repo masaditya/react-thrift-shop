@@ -39,9 +39,9 @@ export const FormProduct = (props: FormProductProps) => {
     formData.append("image", file);
     let config: AxiosRequestConfig = {
       method: "post",
-      url: "https://api.imgur.com/3/image",
+      url: process.env.REACT_APP_URL_IMAGE,
       headers: {
-        Authorization: "Client-ID 82a000d086b1f1e",
+        Authorization: process.env.REACT_APP_CLIENT_ID || "",
       },
       data: formData,
     };

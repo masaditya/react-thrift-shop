@@ -2,7 +2,7 @@ import Axios from "axios";
 import { TProduct, TProductPost, TTranscationPost } from "../../types";
 
 export const useProductService = () => {
-  const baseUrl = "https://5fb13d76590189001644662d.mockapi.io/api/product";
+  const baseUrl = process.env.REACT_APP_URL_PRODUCT || "";
   const getProducts = async () => await Axios.get(baseUrl);
   const postProduct = async (product: TProductPost) =>
     await Axios.post(baseUrl, product);
@@ -21,7 +21,7 @@ export const useProductService = () => {
 };
 
 export const useTransactionService = () => {
-  const baseUrl = "https://5fb13d76590189001644662d.mockapi.io/api/transaction";
+  const baseUrl = process.env.REACT_APP_URL_TRANSACTION || "";
   const getTransaction = async () => await Axios.get(baseUrl);
   const postTransaction = async (data: TTranscationPost) =>
     await Axios.post(baseUrl, data);

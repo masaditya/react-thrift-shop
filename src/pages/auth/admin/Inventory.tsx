@@ -1,15 +1,11 @@
 import React, { useCallback, useState } from "react";
 import {
-  Form,
-  Input,
   Button,
-  Select,
   Row,
   Col,
   Card,
   notification,
   Popconfirm,
-  Space,
   Divider,
 } from "antd";
 import { TProduct } from "../../../types";
@@ -18,8 +14,6 @@ import { useProductService } from "../../../lib/hook/service";
 import { useProductStore } from "../../../lib/store";
 import { currencyString } from "../../../lib/utils";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-
-const { Option } = Select;
 
 export const Inventory = () => {
   const { postProduct, updateProduct, deleteProduct } = useProductService();
