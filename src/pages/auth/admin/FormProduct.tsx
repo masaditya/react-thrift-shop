@@ -10,12 +10,12 @@ import {
   message,
 } from "antd";
 import Axios, { AxiosRequestConfig } from "axios";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TProduct } from "../../../types";
 
 type FormProductProps = {
   isVisible: boolean;
-  onFinish: (value: any) => void;
+  onFinish: (value: TProduct) => void;
   toggleVisible: (visibility: boolean) => void;
   dataToUpdate?: TProduct;
   isLoading?: boolean;
@@ -23,6 +23,8 @@ type FormProductProps = {
 
 export const FormProduct = (props: FormProductProps) => {
   const [form] = Form.useForm<TProduct>();
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
     return () => {
@@ -31,6 +33,8 @@ export const FormProduct = (props: FormProductProps) => {
   }, [props.isVisible]);
 
   const onBeforeUpload = useCallback((file: any) => {
+    setLoading(true);
+    message.loading("Uploading Image ...");
     const formData = new FormData();
     formData.append("image", file);
     let config: AxiosRequestConfig = {
@@ -43,31 +47,27 @@ export const FormProduct = (props: FormProductProps) => {
     };
     Axios(config)
       .then((res) => {
-        console.log(res);
+        console.log(res.data.data.link);
+        message.success("Image Uploaded");
+        setImageUrl(res.data.data.link);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        message.error(err.message);
+        setLoading(false);
       });
     return false;
   }, []);
 
-  const uploadProps = {
-    name: "image",
-    action: "https://api.imgur.com/3/image",
-    headers: {
-      Authorization: "Client-ID 82a000d086b1f1e",
-    },
-    fileList: [] as any,
-    onChange(info: any) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
+  const handleChange = (info: any) => {
+    if (info.file.status === "uploading") {
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === "done") {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,7 +82,9 @@ export const FormProduct = (props: FormProductProps) => {
         layout="vertical"
         form={form}
         name="control-hooks"
-        onFinish={props.onFinish}
+        onFinish={(value) =>
+          props.onFinish({ ...value, product_image: imageUrl })
+        }
         initialValues={props.dataToUpdate}
       >
         <Form.Item name="id_product" label="Product Name" hidden>
@@ -103,8 +105,14 @@ export const FormProduct = (props: FormProductProps) => {
           label="Product Image"
           rules={[{ required: true }]}
         >
-          <Upload beforeUpload={onBeforeUpload}>
-            <Button icon={<UploadOutlined />}>Upload Product Image</Button>
+          <Upload onChange={handleChange} beforeUpload={onBeforeUpload}>
+            <Button
+              loading={loading}
+              disabled={loading}
+              icon={<UploadOutlined />}
+            >
+              {loading ? "Uploading" : "Upload Product Image"}
+            </Button>
           </Upload>
         </Form.Item>
         <Form.Item

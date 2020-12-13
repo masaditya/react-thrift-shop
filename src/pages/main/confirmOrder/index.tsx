@@ -22,22 +22,6 @@ export const ConfirmOrder = () => {
   const [imageUrl, setImageUrl] = useState("");
   const params = useParams<{ id: string }>();
 
-  const onFinish = (values: { username: string; password: string }) => {
-    setLoading(true);
-    setTimeout(() => {
-      //   if (values.username === "admin" && values.password === "admin") {
-      //     let token = cryp.randomBytes(20).toString("hex");
-      //     localStorage.setItem("token", token);
-      //     message.info("welcome admin !");
-      //     push("/admin");
-      //   } else {
-      //     message.info("invalid credentials!");
-      //   }
-      setLoading(false);
-    }, 2000);
-    console.log("Received values of form: ", values);
-  };
-
   const onBeforeUpload = useCallback((file: any) => {
     const formData = new FormData();
     formData.append("image", file);
@@ -56,7 +40,7 @@ export const ConfirmOrder = () => {
       })
       .catch((err) => {
         console.log(err);
-        message.error(JSON.stringify(err).toString());
+        message.error(err.message);
       });
     return false;
   }, []);
@@ -117,7 +101,13 @@ export const ConfirmOrder = () => {
                 uploadButton
               )}
             </Upload>
-            <Button type="primary" onClick={onSubmit} loading={loading} block>
+            <Button
+              disabled={loading || imageUrl === ""}
+              type="primary"
+              onClick={onSubmit}
+              loading={loading}
+              block
+            >
               Submit
             </Button>
           </Card>
