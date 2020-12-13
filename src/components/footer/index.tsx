@@ -35,13 +35,13 @@ export const Footerzz = () => {
             <FacebookFilled style={{ fontSize: 32, paddingRight: "20px" }} />
             Michimichi.id
           </p>
-          <p
+          {/* <p
             onClick={() => {
               push("/admin");
             }}
           >
             <UserOutlined style={{ fontSize: 32, paddingRight: "20px" }} />
-          </p>
+          </p> */}
         </Col>
       </Row>
     </Footer>

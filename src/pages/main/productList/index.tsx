@@ -1,45 +1,70 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BackTop, Button, Layout, Menu, Radio, Row, Space } from "antd";
+import { BackTop, Button, Empty, Layout, Menu, Radio, Row, Space } from "antd";
 import { ArrowUpOutlined, SkinOutlined, UserOutlined } from "@ant-design/icons";
 import { useProductStore } from "../../../lib/store";
 import { TProduct } from "../../../types";
 import { Product } from "../../../components/product";
 import { useProductService } from "../../../lib/hook/service";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 export const ProductList = () => {
   const { getProducts } = useProductService();
+  let query = useQuery();
+  const loc = useLocation();
+  const history = useHistory();
+  console.log(history);
+  const [searchValue, setSearchValue] = useState(query.get("search"));
   const [sexFilter, setSexFilter] = useState();
   const [typeFilter, setTypeFilter] = useState();
   const { products, setProducts } = useProductStore((state) => state);
   const [showedProducts, setShowedProducts] = useState<TProduct[]>(products);
-
   const { Sider, Content } = Layout;
 
   const getProductCall = useCallback(async () => {
     try {
       let response = await getProducts();
-      console.log(response);
       if (response.data) {
         setProducts(response.data);
-        setShowedProducts(response.data);
+        let tmp = response.data;
+        if (query.get("search")) {
+          tmp = products.filter((item) =>
+            new RegExp(query.get("search") || "", "g").test(
+              item.product_name.toLowerCase()
+            )
+          );
+        }
+        setShowedProducts(tmp);
       }
-    } catch (error) {
-      console.log(error);
-      console.log(products);
-    }
+    } catch (error) {}
   }, []);
+
+  useEffect(() => {
+    setSearchValue(query.get("search"));
+    return () => {};
+  }, [loc]);
 
   useEffect(() => {
     if (products === undefined || products.length == 0) {
       getProductCall();
     } else {
-      setShowedProducts(products);
+      let tmp = products;
+      if (query.get("search")) {
+        tmp = products.filter((item) =>
+          new RegExp(searchValue || "", "g").test(
+            item.product_name.toLowerCase()
+          )
+        );
+      }
+      setShowedProducts(tmp);
     }
-  }, []);
+  }, [searchValue]);
 
   const applyTypeFilter = useCallback(
     (e: any) => {
-      console.log(e);
       setTypeFilter(e.target.value);
       let tmp: TProduct[];
       if (sexFilter) {
@@ -58,7 +83,6 @@ export const ProductList = () => {
 
   const applySexFilter = useCallback(
     (e: any) => {
-      console.log(e);
       setSexFilter(e.target.value);
       let tmp: TProduct[];
       if (typeFilter) {
@@ -85,12 +109,8 @@ export const ProductList = () => {
       <Sider
         breakpoint="md"
         collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
+        onBreakpoint={(broken) => {}}
+        onCollapse={(collapsed, type) => {}}
       >
         <Menu mode="inline" style={{ height: "100%", borderRight: 0 }}>
           <Menu.Item disabled style={{ fontWeight: "bold" }}>
@@ -132,13 +152,17 @@ export const ProductList = () => {
       </Sider>
       <Content>
         <Row style={{ marginTop: 50 }} justify="space-around">
-          {showedProducts.map((item: TProduct) => {
-            return (
-              <div className="mb-2" key={item.id_product}>
-                <Product {...item} />
-              </div>
-            );
-          })}
+          {showedProducts.length > 0 ? (
+            showedProducts.map((item: TProduct) => {
+              return (
+                <div className="mb-2" key={item.id_product}>
+                  <Product {...item} />
+                </div>
+              );
+            })
+          ) : (
+            <Empty />
+          )}
         </Row>
       </Content>
     </Layout>
