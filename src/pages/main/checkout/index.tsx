@@ -56,7 +56,6 @@ export const Checkout = () => {
         setIsSuccessCheckout(true);
         emptyCart();
       } catch (error) {
-        console.log(error);
       }
       setLoading(false);
     },
@@ -98,9 +97,7 @@ export const Checkout = () => {
           maildata,
           process.env.REACT_APP_EMAIL_USER || ""
         );
-        console.log(response);
       } catch (error) {
-        console.log(error);
       }
     },
     [total]

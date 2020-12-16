@@ -29,13 +29,10 @@ export const DetailProduct = () => {
   const getProductCall = useCallback(async () => {
     try {
       let response = await getProducts();
-      console.log(response);
       if (response.data) {
         setRecomended(response.data.slice(2, 6));
       }
     } catch (error) {
-      console.log(error);
-      console.log(products);
     }
   }, []);
 
@@ -57,13 +54,10 @@ export const DetailProduct = () => {
   const getShowcase = useCallback(async () => {
     try {
       let response = await findProduct(params.id);
-      console.log(response);
       if (response.data) {
         setShowCase(response.data);
       }
     } catch (error) {
-      console.log(error);
-      console.log(products);
     }
   }, [params]);
 

@@ -21,7 +21,6 @@ export const Login = () => {
       }
       setLoading(false);
     }, 2000);
-    console.log("Received values of form: ", values);
   };
 
   return (

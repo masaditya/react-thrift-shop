@@ -47,13 +47,11 @@ export const FormProduct = (props: FormProductProps) => {
     };
     Axios(config)
       .then((res) => {
-        console.log(res.data.data.link);
         message.success("Image Uploaded");
         setImageUrl(res.data.data.link);
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         message.error(err.message);
         setLoading(false);
       });
@@ -141,7 +139,12 @@ export const FormProduct = (props: FormProductProps) => {
         </Form.Item>
 
         <Form.Item>
-          <Button loading={props.isLoading} type="primary" htmlType="submit">
+          <Button
+            disabled={imageUrl === ""}
+            loading={props.isLoading}
+            type="primary"
+            htmlType="submit"
+          >
             Submit
           </Button>
         </Form.Item>

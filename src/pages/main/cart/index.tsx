@@ -12,7 +12,6 @@ export const Cart = () => {
   const { push } = useHistory();
 
   const onDelete = useCallback((id: string) => {
-    console.log(id);
     removeCart(id);
     message.success("Product Removed");
   }, []);
@@ -55,7 +54,6 @@ export const Cart = () => {
                   <Popconfirm
                     title="Are you sure to delete this product from Cart?"
                     onConfirm={() => onDelete(item.id_product)}
-                    onCancel={() => console.log("Cancel")}
                     okText="Yes"
                     cancelText="No"
                   >

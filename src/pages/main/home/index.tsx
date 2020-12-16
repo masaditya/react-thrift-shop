@@ -38,14 +38,11 @@ export const Home = () => {
   const getProductCall = useCallback(async () => {
     try {
       let response = await getProducts();
-      console.log(response);
       if (response.data) {
         setProducts(response.data);
         fillSegmentProduct(response.data);
       }
     } catch (error) {
-      console.log(error);
-      console.log(products);
     }
   }, [products]);
 

@@ -17,7 +17,6 @@ export const Transaksi = () => {
       const response = await getTransaction();
       if (response) setTransactionData(response.data);
     } catch (error) {
-      console.log(error);
     }
   }, []);
 
@@ -95,7 +94,6 @@ export const Transaksi = () => {
       key: "payment_image",
       render: (trans: string) => (
         <>
-          {console.log(trans)}
           <Image width={100} src={trans} />
         </>
       ),

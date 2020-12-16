@@ -25,11 +25,9 @@ export const Inventory = () => {
   const onFinish = useCallback(
     async (values: TProduct) => {
       setIsLoading(true);
-      console.log(values);
 
       try {
         if (values.id_product) {
-          console.log("UPDATE");
           let res = await updateProduct(values);
           let tmpID = products.findIndex(
             (item: TProduct) => item.id_product === values.id_product
@@ -42,7 +40,6 @@ export const Inventory = () => {
             description: ``,
           });
         } else {
-          console.log("CREATE");
           let res = await postProduct(values);
           let tmp: TProduct[] = [...products, res.data];
           setProducts(tmp);
@@ -67,16 +64,19 @@ export const Inventory = () => {
   const confirm = useCallback(
     async (data: TProduct) => {
       try {
-        console.log("DELETE");
         let res = await deleteProduct(data.id_product);
-        let tmp = products.filter(
-          (item: TProduct) => item.id_product !== data.id_product
-        );
-        setProducts(tmp);
-        notification.success({
-          message: "Delete Data Successfully",
-          description: ``,
-        });
+        if (res) {
+          console.log(res.data);
+          let tmp = products.filter(
+            (item: TProduct) => item.id_product !== res.data.id_product
+          );
+          console.log(tmp);
+          setProducts(tmp);
+          notification.success({
+            message: "Delete Data Successfully",
+            description: ``,
+          });
+        }
       } catch (error) {
         notification.error({
           message: "Error",
@@ -88,11 +88,9 @@ export const Inventory = () => {
   );
 
   function cancel(e: any) {
-    console.log(e);
     // message.error("Click on No");
   }
 
-  console.log(products[0]);
   return (
     <>
       <Divider orientation="right">

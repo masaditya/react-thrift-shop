@@ -16,7 +16,6 @@ export const ProductList = () => {
   let query = useQuery();
   const loc = useLocation();
   const history = useHistory();
-  console.log(history);
   const [searchValue, setSearchValue] = useState(query.get("search"));
   const [sexFilter, setSexFilter] = useState();
   const [typeFilter, setTypeFilter] = useState();

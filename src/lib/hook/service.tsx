@@ -9,7 +9,7 @@ export const useProductService = () => {
   const updateProduct = async (product: TProduct) =>
     await Axios.put(`${baseUrl}/${product.id_product}`, product);
   const deleteProduct = async (id: string) =>
-    await Axios.put(`${baseUrl}/${id}`);
+    await Axios.delete(`${baseUrl}/${id}`);
   const findProduct = async (id: string) => await Axios.get(`${baseUrl}/${id}`);
   return {
     getProducts,

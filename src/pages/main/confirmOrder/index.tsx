@@ -35,11 +35,9 @@ export const ConfirmOrder = () => {
     };
     Axios(config)
       .then((res) => {
-        console.log(res.data.data.link);
         setImageUrl(res.data.data.link);
       })
       .catch((err) => {
-        console.log(err);
         message.error(err.message);
       });
     return false;
@@ -74,7 +72,6 @@ export const ConfirmOrder = () => {
         push("/");
       }
     } catch (error) {
-      console.log(error);
       message.error(JSON.stringify(error).toString());
     }
   }, [params.id, imageUrl]);
